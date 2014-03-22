@@ -18,4 +18,4 @@ Setup:
 
 To test:
 
-* % gradle test -i
+	$ gradle test -i
