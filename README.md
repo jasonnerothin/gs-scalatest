@@ -5,7 +5,7 @@ An kickstarter project that demonstrates GigaSpaces' scala language support.
 
 Prerequisites:
 
-Maven & Gradle installed
+* maven & gradle 
 
 
 Setup:
