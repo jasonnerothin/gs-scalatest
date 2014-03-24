@@ -1,4 +1,5 @@
 apply plugin: 'scala'
+apply plugin: 'groovy'
 
 // this type of variable declaration is deprecated and will be removed in gradle >= 3
 localRepo = "$System.env.M2_REPO"
@@ -30,6 +31,7 @@ def ensureDirectory(directoryPath) {
 dependencies {
 
     compile 'org.scala-lang:scala-library:2.10.3'
+    compile 'org.codehaus.groovy:groovy-all:2.2.0'
 
     compile files(gsFolder + 'gs-openspaces/' + gigaSpacesVersion + '/gs-openspaces-' + gigaSpacesVersion + '.jar')
     compile files(gsFolder + 'gs-runtime/' + gigaSpacesVersion + '/gs-runtime-' + gigaSpacesVersion + '.jar')
@@ -53,6 +55,11 @@ dependencies {
     testCompile 'org.scalamock:scalamock-specs2-support_2.10:3.0.1'
     testCompile 'junit:junit:4.11'
 
+}
+
+test{
+    systemProperty "specs2.commandline" , "html"
+    systemProperty "specs2.outDir"  ,   "$buildDir/reports/specs2" // to put the reports in the same dir as other gradle reports
 }
 
 tasks.withType(ScalaCompile) {
