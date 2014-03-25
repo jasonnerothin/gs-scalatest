@@ -18,11 +18,7 @@ package com.gigaspaces.toymodel
 
 import com.gigaspaces.GsI10nSuite
 import com.gigaspaces.query.IdQuery
-import com.gigaspaces.toymodel.Salary
 import org.scalatest.ConfigMap
-import com.sun.servicetag.SystemEnvironment
-import scala.sys.SystemProperties
-import java.util.NoSuchElementException
 
 /** Created by IntelliJ IDEA.
   * User: jason
