@@ -21,11 +21,11 @@ ensureDirectory(project.ext.jsHomeDir)
 ensureDirectory(project.ext.gsScalaLibDir)
 
 def ensureDirectory(path) {
-    project.ext.dir = new File(path)
-    if (!dir.exists())
-        throw new IllegalStateException(String.format("Directory %s does not exist.", project.ext.dir))
-    if (!dir.isDirectory())
-        throw new IllegalStateException(String.format("File %s is not a directory.", project.ext.dir))
+    project.ext.dir = new File((String)path)
+    if (!project.ext.dir.exists())
+        throw new IllegalStateException(String.format("Directory %s does not exist.", (File)project.ext.dir))
+    if (!project.ext.dir.isDirectory())
+        throw new IllegalStateException(String.format("File %s is not a directory.", (File)project.ext.dir))
 }
 
 dependencies {
@@ -33,9 +33,9 @@ dependencies {
     compile 'org.scala-lang:scala-library:2.10.3'
     compile 'org.codehaus.groovy:groovy-all:2.2.0'
 
-    compile files(project.ext.gsFolder + 'gs-openspaces/' + project.ext.gigaSpacesVersion + '/gs-openspaces-' + project.ext.gigaSpacesVersion + '.jar')
-    compile files(project.ext.gsFolder + 'gs-runtime/' + project.ext.gigaSpacesVersion + '/gs-runtime-' + project.ext.gigaSpacesVersion + '.jar')
-    compile files(project.ext.gsScalaLibDir + 'gs-openspaces-scala.jar')
+    compile files((String)project.ext.gsFolder + 'gs-openspaces/' + (String)project.ext.gigaSpacesVersion + '/gs-openspaces-' + (String)project.ext.gigaSpacesVersion + '.jar')
+    compile files((String)project.ext.gsFolder + 'gs-runtime/' + (String)project.ext.gigaSpacesVersion + '/gs-runtime-' + (String)project.ext.gigaSpacesVersion + '.jar')
+    compile files((String)project.ext.gsScalaLibDir + 'gs-openspaces-scala.jar')
 
     // GS REQUIRED LIBS
     // todo not sure if we really shouldn't move some of these over to 'provided' from 'compile'
