@@ -12,7 +12,7 @@
        http://www.openspaces.org/schema/remoting http://www.openspaces.org/schema/9.7/remoting/openspaces-remoting.xsd">
 
     <!--
-        Spring propery configurer which allows us to use system properties (such as user.name).
+        Spring property configurer which allows us to use system properties (such as user.name).
     -->
     <!--<bean id="propertiesConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>-->
 
@@ -57,7 +57,7 @@
     <os-core:giga-space id="gigaSpace" space="space" tx-manager="transactionManager"/>
 
     <!--
-        A context loader loading a Spring applicaiton context defined by the location only when
+        A context loader loading a Spring application context defined by the location only when
         this processing unit instance is primary (in a primary backup scenario).
     -->
     <!--<os-core:refreshable-context-loader id="modeExample" location="classpath:/META-INF/spring/mode/mode.xml"/>-->
@@ -69,10 +69,10 @@
     <!--
         Remoting supprt exporting the data processor for remoting invocation using OpenSpaces Remoting.
 
-        Note, remoting is based on the different event containers and provides an event listner that
+        Note, remoting is based on the different event containers and provides an event listener that
         exports a list of services for remote invocations. In our case, the data processor is exposed.
 
-        Also note, using notifications instead of polling takes is just a matter of configuraion. Changing
+        Also note, using notifications instead of polling takes is just a matter of configuration. Changing
         to notify container means just changing the xml element name, and setting two attributes to true:
         perform-take-on-notify and ignore-event-on-null-take.
     -->
