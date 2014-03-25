@@ -47,7 +47,7 @@ class DomainModelReadWriteSuite extends GsI10nSuite {
 
   test("read write JobDescription")(pending)
 
-  test("read write Salary") {
+  ignore("read write Salary") {
 
     val id = 32
     val salary = Salary(id, 100000)
