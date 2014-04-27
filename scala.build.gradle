@@ -16,24 +16,6 @@ task test(overwrite: true, dependsOn: testClasses) << {
     }
 }
 
-project.ext {
-    gsScalaLibDir = project.ext.jsHomeDir + '/lib/platform/scala/'
-}
-
-ensureDirectory(project.ext.gsScalaLibDir)
-
-//dependencies {
-//
-//    compile 'org.scala-lang:scala-library:2.10.3'
-//
-//    compile files((String)project.ext.gsScalaLibDir + 'gs-openspaces-scala.jar')
-//
-//    testCompile 'org.scalatest:scalatest_2.10:2.0'
-//    testCompile 'org.scalamock:scalamock-scalatest-support_2.10:3.0.1'
-//    testCompile 'org.scalamock:scalamock-specs2-support_2.10:3.0.1'
-//
-//}
-
 task hello << {
     println "Hi, I'm scala!"
 }
