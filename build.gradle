@@ -1,31 +1,31 @@
+apply plugin: 'scala'
 apply plugin: 'groovy'
 
-project.ext {
-    localRepo = '/Users/jason/.m2/repository' //"$System.env.M2_REPO"
-    jsHomeDir = '/Users/jason/gigaspaces' //"$System.env.jsHomeDir"
-    gsFolder = project.ext.localRepo + '/com/gigaspaces/'
-    gsScalaLibDir = project.ext.jsHomeDir + '/lib/platform/scala/'
-    // 1. The tests in this build script only work with version 9.6.2 and possibly earlier
-    // 2. GigaSpaces' Scala support only works in versions 9.6.2 but not 9.7
-    // 3. Tests passed using a 9.6.2 build provided to me by jb
-    gigaSpacesVersion = '9.6.2-9900-RELEASE'
-}
+// this type of variable declaration is deprecated and will be removed in gradle >= 3
+localRepo = "$System.env.M2_REPO"
+jsHomedir = "$System.env.JSHOMEDIR"
+gsFolder = localRepo + '/com/gigaspaces/'
+gsScalaLibDir = jsHomedir + '/lib/platform/scala/'
+// 1. The tests in this build script only work with version 9.6.2 and possibly earlier
+// 2. GigaSpaces' Scala support only works in versions 9.6.2 but not 9.7
+// 3. Tests passed using a 9.6.2 build provided to me by jb
+gigaSpacesVersion = '9.6.2-9900-RELEASE'
 
 repositories {
     mavenCentral()
 }
 
-ensureDirectory(project.ext.localRepo)
-ensureDirectory(project.ext.gsFolder)
-ensureDirectory(project.ext.jsHomeDir)
-ensureDirectory(project.ext.gsScalaLibDir)
+ensureDirectory(localRepo)
+ensureDirectory(gsFolder)
+ensureDirectory(jsHomedir)
+ensureDirectory(gsScalaLibDir)
 
-def ensureDirectory(path) {
-    project.ext.dir = new File(path)
+def ensureDirectory(directoryPath) {
+    dir = new File(directoryPath)
     if (!dir.exists())
-        throw new IllegalStateException(String.format("Directory %s does not exist.", project.ext.dir))
+        throw new IllegalStateException(String.format("Directory %s does not exist.", directoryPath))
     if (!dir.isDirectory())
-        throw new IllegalStateException(String.format("File %s is not a directory.", project.ext.dir))
+        throw new IllegalStateException(String.format("File %s is not a directory.", directoryPath))
 }
 
 dependencies {
@@ -33,9 +33,9 @@ dependencies {
     compile 'org.scala-lang:scala-library:2.10.3'
     compile 'org.codehaus.groovy:groovy-all:2.2.0'
 
-    compile files(project.ext.gsFolder + 'gs-openspaces/' + project.ext.gigaSpacesVersion + '/gs-openspaces-' + project.ext.gigaSpacesVersion + '.jar')
-    compile files(project.ext.gsFolder + 'gs-runtime/' + project.ext.gigaSpacesVersion + '/gs-runtime-' + project.ext.gigaSpacesVersion + '.jar')
-    compile files(project.ext.gsScalaLibDir + 'gs-openspaces-scala.jar')
+    compile files(gsFolder + 'gs-openspaces/' + gigaSpacesVersion + '/gs-openspaces-' + gigaSpacesVersion + '.jar')
+    compile files(gsFolder + 'gs-runtime/' + gigaSpacesVersion + '/gs-runtime-' + gigaSpacesVersion + '.jar')
+    compile files(gsScalaLibDir + 'gs-openspaces-scala.jar')
 
     // GS REQUIRED LIBS
     // todo not sure if we really shouldn't move some of these over to 'provided' from 'compile'
@@ -53,19 +53,27 @@ dependencies {
     testCompile 'org.scalatest:scalatest_2.10:2.0'
     testCompile 'org.scalamock:scalamock-scalatest-support_2.10:3.0.1'
     testCompile 'org.scalamock:scalamock-specs2-support_2.10:3.0.1'
-    testCompile localGroovy()
     testCompile 'junit:junit:4.11'
 
 }
 
-task build(type: GradleBuild) {
-    buildFile = 'groovy.build.gradle'
-    tasks = ['hello']
+test{
+    systemProperty "specs2.commandline" , "html"
+    systemProperty "specs2.outDir"  ,   "$buildDir/reports/specs2" // to put the reports in the same dir as other gradle reports
 }
 
-task testy(type: GradleBuild){
-    buildFile = 'scala.build.gradle'
-    tasks = ['test']
-    buildFile 'groovy.build.gradle'
-    tasks = ['test']
+tasks.withType(ScalaCompile) {
+    configure(scalaCompileOptions.forkOptions) {
+        memoryMaximumSize = '4g'
+        jvmArgs = ['-XX:MaxPermSize=512m']
+    }
+    scalaCompileOptions.useAnt = false
+    scalaCompileOptions.setAdditionalParameters(['-feature'])
+}
+
+task test(overwrite: true, dependsOn: testClasses) << {
+    ant.taskdef(name: 'scalatest', classname: 'org.scalatest.tools.ScalaTestAntTask' , classpath: sourceSets.test.runtimeClasspath.asPath)
+    ant.scalatest(runpath: sourceSets.test.output.classesDir, haltonfailure: 'true', fork: 'false') {
+        reporter(type: 'stdout')
+    }
 }
